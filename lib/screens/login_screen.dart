@@ -111,19 +111,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const SizedBox(height: 40),
                 AppButton(
                   text: '로그인',
-                  backgroundColor: AppColors.primary,
-                  textColor: AppColors.background,
                   onPressed: _login,
                 ),
                 const SizedBox(height: 10),
                 AppButton(
                   text: '일반 회원으로 가입하기',
                   onPressed: () => context.push('/signup/customer'),
+                  textColor: AppColors.primary,
+                  backgroundColor: AppColors.background,
                 ),
                 const SizedBox(height: 10),
                 AppButton(
                   text: '사장님으로 가입하기',
                   onPressed: () => context.push('/signup/merchant'),
+                  textColor: AppColors.primary,
+                  backgroundColor: AppColors.background,
                 ),
               ],
             ),
