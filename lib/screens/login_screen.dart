@@ -1,6 +1,8 @@
 import 'package:danji_client/constants/colors.dart';
 import 'package:danji_client/models/api_error.dart';
+import 'package:danji_client/providers/merchant_provider.dart';
 import 'package:danji_client/services/auth_service.dart';
+import 'package:danji_client/services/merchant_service.dart';
 import 'package:danji_client/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,18 +35,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       final data = await AuthService().login(email, password);
 
       ref.read(authProvider.notifier).login(
+        userId: data['userId'],
         accessToken: data['accessToken'],
         refreshToken: data['refreshToken'],
         role: data['role'],
       );
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        final role = data['role'];
-        if (role == 'CUSTOMER') {
-          context.go('/home/customer');
-        } else if (role == 'MERCHANT') {
-          context.go('/home/merchant');
-        }
+        _handlePostLogin(data['role'], data['userId']);
       });
     } on ApiError catch (e) {
       if (!mounted) return;
@@ -53,6 +51,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       );
     }
   }
+
+  Future<void> _handlePostLogin(String role, int userId) async {
+  if (!mounted) return;
+
+  if (role == 'CUSTOMER') {
+    context.go('/home/customer');
+  } else if (role == 'MERCHANT') {
+    final marketData = await MerchantService().getMarketInfo(userId);
+    ref.read(merchantProvider.notifier).update(
+      marketName: marketData['marketName'],
+      marketId: marketData['marketId'],
+      marketAddress: marketData['marketAddress']
+    );
+    context.go('/home/merchant');
+  }
+}
 
   @override
   Widget build(BuildContext context) {

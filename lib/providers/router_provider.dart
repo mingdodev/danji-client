@@ -1,3 +1,4 @@
+import 'package:danji_client/screens/merchant/merchant_productList_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../providers/auth_provider.dart';
@@ -11,18 +12,20 @@ final routerProvider = Provider<GoRouter>((ref) {
   final router = GoRouter(
     initialLocation: '/login',
     routes: [
+      GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
       GoRoute(
-        path: '/login', builder: (context, state) => const LoginScreen(),
+        path: '/signup/customer',
+        builder: (context, state) => const SignupCustomerScreen(),
       ),
       GoRoute(
-        path: '/signup/customer', builder: (context, state) => const SignupCustomerScreen(),
+        path: '/signup/merchant',
+        builder: (context, state) => const SignupMerchantScreen(),
       ),
+
+      // CUSTOMER
       GoRoute(
-        path: '/signup/merchant', builder: (context, state) => const SignupMerchantScreen(),
-      ),
-      
-      GoRoute(
-        path: '/home/customer', builder: (context, state) => const HomeCustomerScreen(),
+        path: '/home/customer',
+        builder: (context, state) => const HomeCustomerScreen(),
       ),
       // GoRoute(
       //   path: '/home/customer/marketList', builder: (context, state) => const CustomerMarketListScreen(),
@@ -37,12 +40,19 @@ final routerProvider = Provider<GoRouter>((ref) {
       //   path: '/home/customer/orderList', builder: (context, state) => const CustomerOrderListScreen(),
       // ),
 
+      // MERCHANT
       GoRoute(
-        path: '/home/merchant', builder: (context, state) => const HomeMerchantScreen(),
+        path: '/home/merchant',
+        builder: (context, state) => const HomeMerchantScreen(),
       ),
-      // GoRoute(
-      //   path: '/home/merchant/productList', builder: (context, state) => const MerchantProductListScreen(),
-      // ),
+      GoRoute(
+        path: '/home/merchant/productList',
+        builder: (context, state) {
+          final products = state.extra as List<Map<String, dynamic>>;
+          return MerchantProductListScreen(products: products);
+        },
+      ),
+
       // GoRoute(
       //   path: '/home/merchant/productList/add', builder: (context, state) => const MerchantAddProductScreen(),
       // ),
@@ -52,7 +62,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       // GoRoute(
       //   path: '/home/merchant/orderList/update', builder: (context, state) => const MerchantUpdateOrderScreen(),
       // ),
-      
+
       // GoRoute(
       //   path: '/home/chat', builder: (context, state) => const ChatScreen(),
       // ),
@@ -68,9 +78,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       }
 
       if (isLoggedIn && state.fullPath == '/login') {
-        return auth.role == 'CUSTOMER'
-            ? '/home/customer'
-            : '/home/merchant';
+        return auth.role == 'CUSTOMER' ? '/home/customer' : '/home/merchant';
       }
 
       return null;
