@@ -23,10 +23,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
   final storage = FlutterSecureStorage();
 
   void login({
+    required int userId,
     required String accessToken,
     required String refreshToken,
     required String role,
   }) async {
+    await storage.write(key: 'userId', value: 'userId');
     await storage.write(key: 'accessToken', value: accessToken);
     await storage.write(key: 'refreshToken', value: refreshToken);
     await storage.write(key: 'role', value: role);
