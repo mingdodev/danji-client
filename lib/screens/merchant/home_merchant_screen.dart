@@ -1,5 +1,3 @@
-import 'package:danji_client/providers/merchant_provider.dart';
-import 'package:danji_client/services/product_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,8 +7,6 @@ class HomeMerchantScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final marketId = ref.watch(merchantProvider).marketId;
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(

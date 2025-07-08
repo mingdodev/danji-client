@@ -260,7 +260,7 @@ class _MerchantProductListScreenState
                             '/home/merchant/productList/add',
                           );
                           if (result == true) {
-                            await _loadProducts(); // ✅ 상품 추가 후 다시 불러오기
+                            await _loadProducts();
                           }
                         },
                         backgroundColor: AppColors.primary,

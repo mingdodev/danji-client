@@ -58,7 +58,6 @@ class _MerchantAddProductScreenState extends State<MerchantAddProductScreen> {
       );
       if (!context.mounted) return;
 
-      // ✅ 성공 시 true를 반환하며 pop
       Navigator.of(context).pop(true);
     } catch (e) {
       if (!context.mounted) return;
