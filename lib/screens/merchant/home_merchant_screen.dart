@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class HomeCustomerScreen extends StatelessWidget {
-  const HomeCustomerScreen({super.key});
+class HomeMerchantScreen extends StatelessWidget {
+  const HomeMerchantScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class HomeCustomerScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 80),
             const Text(
-              '환영합니다 고객님!\n단체 주문 지키미입니다',
+              '환영합니다 사장님!\n단체 주문 지키미입니다',
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.w700,
@@ -25,7 +25,7 @@ class HomeCustomerScreen extends StatelessWidget {
             ),
             const SizedBox(height: 40),
 
-            // 가게 둘러보기 카드
+            // 상품 관리하기 카드
             Container(
               width: double.infinity,
               height: 167,
@@ -39,7 +39,7 @@ class HomeCustomerScreen extends StatelessWidget {
                     left: 27,
                     top: 36,
                     child: Text(
-                      '가게 둘러보기',
+                      '상품 관리하기',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w700,
@@ -51,7 +51,7 @@ class HomeCustomerScreen extends StatelessWidget {
                     left: 27,
                     top: 84,
                     child: Text(
-                      '입점된 가게들을 둘러보고\n원하는 음식을 주문해요',
+                      '판매할 상품을\n등록하고 관리해요',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -63,7 +63,7 @@ class HomeCustomerScreen extends StatelessWidget {
                     right: 16,
                     top: 32,
                     child: Image.asset(
-                      'assets/images/menu-customer.png',
+                      'assets/images/menu-merchant.png',
                       width: 103,
                       height: 103,
                       fit: BoxFit.cover,
@@ -101,7 +101,7 @@ class HomeCustomerScreen extends StatelessWidget {
                     left: 27,
                     top: 84,
                     child: Text(
-                      '주문 내역을 확인하고\n사장님과 소통해요',
+                      '주문 내역을 확인하고\n고객과 소통해요',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
