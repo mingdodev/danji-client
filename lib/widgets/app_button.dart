@@ -6,6 +6,7 @@ class AppButton extends StatelessWidget {
   final VoidCallback onPressed;
   final Color textColor;
   final Color backgroundColor;
+  final double fontSize;
 
   const AppButton({
     super.key,
@@ -13,6 +14,7 @@ class AppButton extends StatelessWidget {
     required this.onPressed,
     this.textColor = AppColors.primary,
     this.backgroundColor = Colors.transparent,
+    this.fontSize = 19,
   });
 
   @override
@@ -33,8 +35,8 @@ class AppButton extends StatelessWidget {
         onPressed: onPressed,
         child: Text(
           text,
-          style: const TextStyle(
-            fontSize: 19,
+          style: TextStyle(
+            fontSize: fontSize,
             fontFamily: 'Pretendard',
             fontWeight: FontWeight.w500,
             letterSpacing: 0.76,
