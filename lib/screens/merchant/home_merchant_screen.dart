@@ -33,17 +33,7 @@ class HomeMerchantScreen extends ConsumerWidget {
             // 상품 관리하기 카드
             GestureDetector(
               onTap: () async {
-                if (marketId == null) return;
-                try {
-                  final products = await ProductService().getProducts(marketId);
-                  if (!context.mounted) return;
-                  context.push('/home/merchant/productList', extra: products);
-                } catch (e) {
-                  if (!context.mounted) return;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('상품 목록을 불러오는 데 실패했어요.')),
-                  );
-                }
+                context.push('/home/merchant/productList');
               },
               child: Container(
                 width: double.infinity,

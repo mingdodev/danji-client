@@ -12,7 +12,7 @@ class AppButton extends StatelessWidget {
     super.key,
     required this.text,
     required this.onPressed,
-    this.textColor = AppColors.background,
+    this.textColor = const Color.fromARGB(255, 255, 255, 255),
     this.backgroundColor = AppColors.primary,
     this.fontSize = 19,
   });

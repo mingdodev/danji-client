@@ -12,4 +12,23 @@ class ProductService {
     final List<dynamic> rawList = body['data'];
     return rawList.cast<Map<String, dynamic>>();
   }
+
+  Future<void> addProduct({
+    required String name,
+    required int price,
+    int? minQuantity,
+    int? maxQuantity,
+  }) async {
+    final response = await dio.post('/api/products', data: {
+      'name': name,
+      'price': price,
+      'minQuantity': minQuantity,
+      'maxQuantity': maxQuantity,
+    });
+
+    final body = response.data;
+    if (body['success'] != true) {
+      throw Exception(body['message'] ?? '상품 추가 실패');
+    }
+  }
 }
