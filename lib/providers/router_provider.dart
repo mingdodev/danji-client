@@ -1,4 +1,5 @@
 import 'package:danji_client/screens/merchant/merchant_add_product_screen.dart';
+import 'package:danji_client/screens/merchant/merchant_orderList_screen.dart';
 import 'package:danji_client/screens/merchant/merchant_productList_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -54,9 +55,9 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/home/merchant/productList/add',
         builder: (context, state) => const MerchantAddProductScreen(),
       ),
-      // GoRoute(
-      //   path: '/home/merchant/orderList', builder: (context, state) => const MerchantOrderListScreen(),
-      // ),
+      GoRoute(
+        path: '/home/merchant/orderList', builder: (context, state) => const MerchantOrderListScreen(),
+      ),
       // GoRoute(
       //   path: '/home/merchant/orderList/update', builder: (context, state) => const MerchantUpdateOrderScreen(),
       // ),
