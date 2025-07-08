@@ -19,16 +19,28 @@ class ProductService {
     int? minQuantity,
     int? maxQuantity,
   }) async {
-    final response = await dio.post('/api/products', data: {
-      'name': name,
-      'price': price,
-      'minQuantity': minQuantity,
-      'maxQuantity': maxQuantity,
-    });
+    final response = await dio.post(
+      '/api/products',
+      data: {
+        'name': name,
+        'price': price,
+        'minQuantity': minQuantity,
+        'maxQuantity': maxQuantity,
+      },
+    );
 
     final body = response.data;
     if (body['success'] != true) {
       throw Exception(body['message'] ?? '상품 추가 실패');
+    }
+  }
+
+  Future<void> deleteProduct(int productId) async {
+    final response = await dio.delete('/api/products/$productId');
+
+    final body = response.data;
+    if (body['success'] != true) {
+      throw Exception(body['message'] ?? '상품 삭제 실패');
     }
   }
 }

@@ -6,6 +6,7 @@ import 'package:danji_client/widgets/app_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter/cupertino.dart';
 
 class MerchantProductListScreen extends ConsumerStatefulWidget {
   const MerchantProductListScreen({super.key});
@@ -122,39 +123,123 @@ class _MerchantProductListScreenState
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      product['name'],
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w700,
-                                        color: Color(0xFF535353),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      '${product['price'].toInt()}원',
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w700,
-                                        color: Color(0xFF5B5B5B),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    if (product['minQuantity'] != null ||
-                                        product['maxQuantity'] != null)
-                                      Text(
-                                        [
-                                          if (product['minQuantity'] != null)
-                                            '최소 수량 ${product['minQuantity']}',
-                                          if (product['maxQuantity'] != null)
-                                            '최대 수량 ${product['maxQuantity']}',
-                                        ].join(', '),
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                          color: Color(0xFF5B5B5B),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                product['name'],
+                                                style: const TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Color(0xFF535353),
+                                                ),
+                                              ),
+                                              const SizedBox(height: 8),
+                                              Text(
+                                                '${product['price'].toInt()}원',
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Color(0xFF5B5B5B),
+                                                ),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              if (product['minQuantity'] !=
+                                                      null ||
+                                                  product['maxQuantity'] !=
+                                                      null)
+                                                Text(
+                                                  [
+                                                    if (product['minQuantity'] !=
+                                                        null)
+                                                      '최소 수량 ${product['minQuantity']}',
+                                                    if (product['maxQuantity'] !=
+                                                        null)
+                                                      '최대 수량 ${product['maxQuantity']}',
+                                                  ].join(', '),
+                                                  style: const TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Color(0xFF5B5B5B),
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
+
+                                        IconButton(
+                                          icon: const Icon(
+                                            Icons.delete_outline,
+                                            color: AppColors.grayLightLight,
+                                          ),
+                                          onPressed: () async {
+                                            final confirm =
+                                                await showCupertinoDialog<bool>(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      CupertinoAlertDialog(
+                                                        title: const Text(
+                                                          '상품 삭제',
+                                                        ),
+                                                        content: const Text(
+                                                          '정말 삭제하시겠어요?',
+                                                        ),
+                                                        actions: [
+                                                          CupertinoDialogAction(
+                                                            isDestructiveAction:
+                                                                true,
+                                                            onPressed: () =>
+                                                                Navigator.pop(
+                                                                  context,
+                                                                  true,
+                                                                ),
+                                                            child: const Text(
+                                                              '삭제',
+                                                            ),
+                                                          ),
+                                                          CupertinoDialogAction(
+                                                            onPressed: () =>
+                                                                Navigator.pop(
+                                                                  context,
+                                                                  false,
+                                                                ),
+                                                            child: const Text(
+                                                              '취소',
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                );
+
+                                            if (confirm != true) return;
+
+                                            try {
+                                              await ProductService()
+                                                  .deleteProduct(product['id']);
+                                              if (!context.mounted) return;
+                                              await _loadProducts();
+                                            } catch (e) {
+                                              if (!context.mounted) return;
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                    '상품 삭제에 실패했어요.',
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    ),
                                   ],
                                 ),
                               );
