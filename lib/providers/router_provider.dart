@@ -1,3 +1,4 @@
+import 'package:danji_client/screens/customer/customer_marketList_screen.dart';
 import 'package:danji_client/screens/merchant/merchant_add_product_screen.dart';
 import 'package:danji_client/screens/merchant/merchant_orderList_screen.dart';
 import 'package:danji_client/screens/merchant/merchant_productList_screen.dart';
@@ -29,9 +30,9 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/home/customer',
         builder: (context, state) => const HomeCustomerScreen(),
       ),
-      // GoRoute(
-      //   path: '/home/customer/marketList', builder: (context, state) => const CustomerMarketListScreen(),
-      // ),
+      GoRoute(
+        path: '/home/customer/marketList', builder: (context, state) => const CustomerMarketListScreen(),
+      ),
       // GoRoute(
       //   path: '/home/customer/marketList/detail', builder: (context, state) => const CustomerMarketDetailScreen(),
       // ),
