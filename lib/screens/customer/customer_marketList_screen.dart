@@ -34,7 +34,7 @@ class _CustomerMarketListScreenState extends State<CustomerMarketListScreen> {
   @override
   void initState() {
     super.initState();
-    _loadMarkets(); // 화면 진입 시 keyword 없이 요청
+    _loadMarkets();
   }
 
   @override
@@ -42,81 +42,78 @@ class _CustomerMarketListScreenState extends State<CustomerMarketListScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppHeader(blueTitle: '가게 ', blackTitle: '둘러보기'),
-              const SizedBox(height: 16),
+        child: Column(
+          children: [
+            const AppHeader(blueTitle: '가게 ', blackTitle: '둘러보기'),
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: _buildSearchBox(),
+            ),
+            const SizedBox(height: 12),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                children: [
+                  if (isLoading)
+                    const Center(child: CircularProgressIndicator())
+                  else if (markets.isEmpty)
+                    const Center(child: Text("등록된 가게가 없어요."))
+                  else
+                    ...markets.map(
+                      (market) => _buildStoreCard(
+                        id: market['id'],
+                        name: market['name'],
+                        address: market['address'],
+                        imageUrl: market['imageUrl'],
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-              // 검색창
-              Container(
-                height: 56,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Color(0xFF1E88E5)),
-                  borderRadius: BorderRadius.circular(60),
-                  color: Colors.white,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _searchController,
-                          decoration: const InputDecoration(
-                            hintText: '검색어를 입력하세요',
-                            border: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            disabledBorder: InputBorder.none,
-                            hintStyle: TextStyle(
-                              color: Color(0xFF424242),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              letterSpacing: 0.50,
-                            ),
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          _loadMarkets(keyword: _searchController.text);
-                        },
-                        icon: const Icon(
-                          Icons.search,
-                          color: Color(0xFF1E88E5),
-                        ),
-                      ),
-                    ],
+  Widget _buildSearchBox() {
+    return Container(
+      height: 56,
+      decoration: BoxDecoration(
+        border: Border.all(color: Color(0xFF1E88E5)),
+        borderRadius: BorderRadius.circular(60),
+        color: Colors.white,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _searchController,
+                decoration: const InputDecoration(
+                  hintText: '검색어를 입력하세요',
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  hintStyle: TextStyle(
+                    color: Color(0xFF424242),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 0.50,
                   ),
                 ),
               ),
-
-              const SizedBox(height: 24),
-
-              // 마켓 리스트
-              Expanded(
-                child: isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : markets.isEmpty
-                    ? const Center(child: Text("등록된 가게가 없어요."))
-                    : ListView.builder(
-                        itemCount: markets.length,
-                        itemBuilder: (context, index) {
-                          final market = markets[index];
-                          return _buildStoreCard(
-                            id: market['id'],
-                            name: market['name'],
-                            address: market['address'],
-                            imageUrl: market['imageUrl'],
-                          );
-                        },
-                      ),
-              ),
-            ],
-          ),
+            ),
+            IconButton(
+              onPressed: () {
+                _loadMarkets(keyword: _searchController.text);
+              },
+              icon: const Icon(Icons.search, color: Color(0xFF1E88E5)),
+            ),
+          ],
         ),
       ),
     );
@@ -136,7 +133,7 @@ class _CustomerMarketListScreenState extends State<CustomerMarketListScreen> {
         );
       },
       child: Container(
-        margin: const EdgeInsets.only(bottom: 24),
+        margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: const Color(0xFFF7F7F7),
