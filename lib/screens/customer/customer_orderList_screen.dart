@@ -169,57 +169,6 @@ class _CustomerOrderListScreenState extends State<CustomerOrderListScreen> {
                                 ),
                               ),
                               const SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFF64B5F6),
-                                        borderRadius: BorderRadius.circular(30),
-                                      ),
-                                      child: const Center(
-                                        child: Text(
-                                          '주문 수락하기',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600,
-                                            height: 1.27,
-                                            letterSpacing: 0.60,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: Container(
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFF7F7F7),
-                                        border: Border.all(
-                                          color: Color(0xFF7E7E7E),
-                                        ),
-                                        borderRadius: BorderRadius.circular(30),
-                                      ),
-                                      child: const Center(
-                                        child: Text(
-                                          '주문 거절하기',
-                                          style: TextStyle(
-                                            color: Color(0xFF7E7E7E),
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600,
-                                            height: 1.27,
-                                            letterSpacing: 0.60,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 8),
                               Container(
                                 width: double.infinity,
                                 height: 40,
@@ -227,10 +176,10 @@ class _CustomerOrderListScreenState extends State<CustomerOrderListScreen> {
                                   color: const Color(0xFFD9D9D9),
                                   borderRadius: BorderRadius.circular(30),
                                 ),
-                                child: const Center(
+                                child: Center(
                                   child: Text(
-                                    '주문 수정하기',
-                                    style: TextStyle(
+                                    getOrderStatusText(order['orderStatus']),
+                                    style: const TextStyle(
                                       color: Color(0xFF535353),
                                       fontSize: 15,
                                       fontWeight: FontWeight.w600,
@@ -250,5 +199,18 @@ class _CustomerOrderListScreenState extends State<CustomerOrderListScreen> {
         ),
       ),
     );
+  }
+}
+
+String getOrderStatusText(String status) {
+  switch (status) {
+    case 'PENDING':
+      return '주문 진행 중';
+    case 'REJECTED':
+      return '주문 거절됨';
+    case 'ACCEPTED':
+      return '주문 완료';
+    default:
+      return '주문 상태 불러오기 실패';
   }
 }
