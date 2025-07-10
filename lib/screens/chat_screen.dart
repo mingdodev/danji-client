@@ -40,14 +40,15 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     }
     final accessToken = await storage.read(key: 'accessToken');
 
-    const prodUrl = 'https://danji.o-r.kr/chat/';
+    const prodUrl = 'https://danji.o-r.kr';
     const localWebSocketUrl = 'http://192.168.35.57:3000';
 
     socket = IO.io(
-      localWebSocketUrl,
+      prodUrl,
       IO.OptionBuilder()
           .setTransports(['websocket'])
           .disableAutoConnect()
+          .setPath('/chat/socket.io')
           .setExtraHeaders({'authorization': 'Bearer $accessToken'})
           .build(),
     );

@@ -12,7 +12,7 @@ const localAPIUrl = 'http://127.0.0.1:8080';
 
 final dio = Dio(
   BaseOptions(
-    baseUrl: localAPIUrl,
+    baseUrl: prodUrl,
     connectTimeout: const Duration(seconds: 5),
     receiveTimeout: const Duration(seconds: 5),
     headers: {
