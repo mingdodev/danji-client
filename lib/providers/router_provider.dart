@@ -1,5 +1,6 @@
 import 'package:danji_client/screens/customer/customer_marketDetail_screen.dart';
 import 'package:danji_client/screens/customer/customer_marketList_screen.dart';
+import 'package:danji_client/screens/customer/customer_orderList_screen.dart';
 import 'package:danji_client/screens/customer/customer_order_screen.dart';
 import 'package:danji_client/screens/merchant/merchant_add_product_screen.dart';
 import 'package:danji_client/screens/merchant/merchant_orderList_screen.dart';
@@ -56,10 +57,9 @@ final routerProvider = Provider<GoRouter>((ref) {
           return CustomerOrderScreen(extra: args);
         },
       ),
-
-      // GoRoute(
-      //   path: '/home/customer/orderList', builder: (context, state) => const CustomerOrderListScreen(),
-      // ),
+      GoRoute(
+        path: '/home/customer/orderList', builder: (context, state) => const CustomerOrderListScreen(),
+      ),
 
       // MERCHANT
       GoRoute(

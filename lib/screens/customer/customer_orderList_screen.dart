@@ -3,15 +3,15 @@ import 'package:danji_client/widgets/app_header.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class MerchantOrderListScreen extends StatefulWidget {
-  const MerchantOrderListScreen({super.key});
+class CustomerOrderListScreen extends StatefulWidget {
+  const CustomerOrderListScreen({super.key});
 
   @override
-  State<MerchantOrderListScreen> createState() =>
-      _MerchantOrderListScreenState();
+  State<CustomerOrderListScreen> createState() =>
+      _CustomerOrderListScreenState();
 }
 
-class _MerchantOrderListScreenState extends State<MerchantOrderListScreen> {
+class _CustomerOrderListScreenState extends State<CustomerOrderListScreen> {
   List<Map<String, dynamic>> orders = [];
   bool isLoading = true;
 
@@ -23,7 +23,7 @@ class _MerchantOrderListScreenState extends State<MerchantOrderListScreen> {
 
   Future<void> _fetchOrders() async {
     try {
-      final result = await OrderService().getMerchantOrders();
+      final result = await OrderService().getCustomerOrders();
       setState(() {
         orders = result;
         isLoading = false;
@@ -63,7 +63,7 @@ class _MerchantOrderListScreenState extends State<MerchantOrderListScreen> {
                       itemCount: orders.length,
                       itemBuilder: (context, index) {
                         final order = orders[index];
-                        final customer = order['customer'];
+                        final market = order['market'];
                         final orderItems = List<Map<String, dynamic>>.from(
                           order['orderItems'],
                         );
@@ -79,11 +79,19 @@ class _MerchantOrderListScreenState extends State<MerchantOrderListScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                customer['name'],
+                                market['name'],
                                 style: const TextStyle(
                                   color: Color(0xFF535353),
                                   fontSize: 20,
                                   fontWeight: FontWeight.w700,
+                                  letterSpacing: 1.20,
+                                ),
+                              ),
+                              Text(
+                                market['address'],
+                                style: const TextStyle(
+                                  color: Color(0xFF535353),
+                                  fontSize: 13,
                                   letterSpacing: 1.20,
                                 ),
                               ),
@@ -113,19 +121,24 @@ class _MerchantOrderListScreenState extends State<MerchantOrderListScreen> {
                                 ),
                               ),
                               const SizedBox(height: 4),
-                              Text(
-                                '배달 주소: ${order['deliveryAddress']}',
-                                style: const TextStyle(
-                                  color: Color(0xFF909090),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  height: 1.58,
-                                  letterSpacing: 0.48,
+                              if (order['deliveryAddress'] != null &&
+                                  order['deliveryAddress']
+                                      .toString()
+                                      .trim()
+                                      .isNotEmpty)
+                                Text(
+                                  '배달 주소: ${order['deliveryAddress']}',
+                                  style: const TextStyle(
+                                    color: Color(0xFF909090),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    height: 1.58,
+                                    letterSpacing: 0.48,
+                                  ),
                                 ),
-                              ),
                               const SizedBox(height: 4),
                               Text(
-                                '${order['totalPrice']} 원',
+                                '${order['totalPrice'].toInt()} 원',
                                 style: const TextStyle(
                                   color: Color(0xFF909090),
                                   fontSize: 12,
