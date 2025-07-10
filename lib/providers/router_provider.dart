@@ -1,3 +1,4 @@
+import 'package:danji_client/screens/chat_screen.dart';
 import 'package:danji_client/screens/customer/customer_marketDetail_screen.dart';
 import 'package:danji_client/screens/customer/customer_marketList_screen.dart';
 import 'package:danji_client/screens/customer/customer_orderList_screen.dart';
@@ -95,10 +96,17 @@ final routerProvider = Provider<GoRouter>((ref) {
           );
         },
       ),
-      
-      // GoRoute(
-      //   path: '/home/chat', builder: (context, state) => const ChatScreen(),
-      // ),
+
+      GoRoute(
+        path: '/chat',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>;
+          return ChatScreen(
+            targetId: extra['targetId'],
+            targetName: extra['targetName'],
+          );
+        },
+      ),
     ],
     redirect: (context, state) {
       final auth = ref.read(authProvider);

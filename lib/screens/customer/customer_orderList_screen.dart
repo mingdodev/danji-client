@@ -2,6 +2,7 @@ import 'package:danji_client/services/order_service.dart';
 import 'package:danji_client/widgets/app_header.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class CustomerOrderListScreen extends StatefulWidget {
   const CustomerOrderListScreen({super.key});
@@ -148,26 +149,38 @@ class _CustomerOrderListScreenState extends State<CustomerOrderListScreen> {
                                 ),
                               ),
                               const SizedBox(height: 16),
-                              Container(
-                                width: double.infinity,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF1E88E5),
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: const Center(
-                                  child: Text(
-                                    '1:1 채팅하기',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                      height: 1.27,
-                                      letterSpacing: 0.60,
+                              GestureDetector(
+                                onTap: () {
+                                  context.push(
+                                    '/chat',
+                                    extra: {
+                                      'targetId': market['userId'],
+                                      'targetName': market['name'],
+                                    },
+                                  );
+                                },
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF1E88E5),
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  child: const Center(
+                                    child: Text(
+                                      '1:1 채팅하기',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                        height: 1.27,
+                                        letterSpacing: 0.60,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
+
                               const SizedBox(height: 8),
                               Container(
                                 width: double.infinity,
