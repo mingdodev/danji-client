@@ -1,3 +1,4 @@
+import 'package:danji_client/constants/colors.dart';
 import 'package:danji_client/services/order_service.dart';
 import 'package:danji_client/widgets/app_header.dart';
 import 'package:flutter/cupertino.dart';
@@ -113,19 +114,24 @@ class _MerchantOrderListScreenState extends State<MerchantOrderListScreen> {
                                 ),
                               ),
                               const SizedBox(height: 4),
-                              Text(
-                                '배달 주소: ${order['deliveryAddress']}',
-                                style: const TextStyle(
-                                  color: Color(0xFF909090),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  height: 1.58,
-                                  letterSpacing: 0.48,
+                              if (order['deliveryAddress'] != null &&
+                                  order['deliveryAddress']
+                                      .toString()
+                                      .trim()
+                                      .isNotEmpty)
+                                Text(
+                                  '배달 주소: ${order['deliveryAddress']}',
+                                  style: const TextStyle(
+                                    color: Color(0xFF909090),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    height: 1.58,
+                                    letterSpacing: 0.48,
+                                  ),
                                 ),
-                              ),
                               const SizedBox(height: 4),
                               Text(
-                                '${order['totalPrice']} 원',
+                                '${order['totalPrice'].toInt()} 원',
                                 style: const TextStyle(
                                   color: Color(0xFF909090),
                                   fontSize: 12,
@@ -156,56 +162,119 @@ class _MerchantOrderListScreenState extends State<MerchantOrderListScreen> {
                                 ),
                               ),
                               const SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFF64B5F6),
-                                        borderRadius: BorderRadius.circular(30),
-                                      ),
-                                      child: const Center(
-                                        child: Text(
-                                          '주문 수락하기',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600,
-                                            height: 1.27,
-                                            letterSpacing: 0.60,
+                              if (order['orderStatus'] == 'PENDING')
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: GestureDetector(
+                                        onTap: () async {
+                                          await OrderService()
+                                              .updateOrderStatus(
+                                                orderId: order['orderId'],
+                                                status: 'ACCEPTED',
+                                              );
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            const SnackBar(
+                                              content: Text('주문 수락이 완료되었습니다.'),
+                                            ),
+                                          );
+                                          await _fetchOrders();
+                                        },
+                                        child: Container(
+                                          height: 40,
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFF64B5F6),
+                                            borderRadius: BorderRadius.circular(
+                                              30,
+                                            ),
+                                          ),
+                                          child: const Center(
+                                            child: Text(
+                                              '주문 수락하기',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w600,
+                                                height: 1.27,
+                                                letterSpacing: 0.60,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: Container(
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFF7F7F7),
-                                        border: Border.all(
-                                          color: Color(0xFF7E7E7E),
-                                        ),
-                                        borderRadius: BorderRadius.circular(30),
-                                      ),
-                                      child: const Center(
-                                        child: Text(
-                                          '주문 거절하기',
-                                          style: TextStyle(
-                                            color: Color(0xFF7E7E7E),
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600,
-                                            height: 1.27,
-                                            letterSpacing: 0.60,
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: GestureDetector(
+                                        onTap: () async {
+                                          await OrderService()
+                                              .updateOrderStatus(
+                                                orderId: order['orderId'],
+                                                status: 'REJECTED',
+                                              );
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            const SnackBar(
+                                              content: Text('주문 거절이 완료되었습니다.'),
+                                            ),
+                                          );
+                                          await _fetchOrders();
+                                        },
+                                        child: Container(
+                                          height: 40,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.background,
+                                            border: Border.all(
+                                              color: const Color(0xFF7E7E7E),
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              30,
+                                            ),
+                                          ),
+                                          child: const Center(
+                                            child: Text(
+                                              '주문 거절하기',
+                                              style: TextStyle(
+                                                color: Color(0xFF7E7E7E),
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w600,
+                                                height: 1.27,
+                                                letterSpacing: 0.60,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
+                                  ],
+                                )
+                              else
+                                Container(
+                                  width: double.infinity,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.background,
+                                    border: Border.all(
+                                      color: Color(0xFF7E7E7E),
+                                    ),
+                                    borderRadius: BorderRadius.circular(30),
                                   ),
-                                ],
-                              ),
+                                  child: Center(
+                                    child: Text(
+                                      getOrderStatusText(order['orderStatus']),
+                                      style: const TextStyle(
+                                        color: Color(0xFF535353),
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                        height: 1.27,
+                                        letterSpacing: 0.60,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               const SizedBox(height: 8),
                               Container(
                                 width: double.infinity,
@@ -237,5 +306,16 @@ class _MerchantOrderListScreenState extends State<MerchantOrderListScreen> {
         ),
       ),
     );
+  }
+}
+
+String getOrderStatusText(String status) {
+  switch (status) {
+    case 'REJECTED':
+      return '주문 거절 완료';
+    case 'ACCEPTED':
+      return '주문 수락 완료';
+    default:
+      return '주문 상태 불러오기 실패';
   }
 }

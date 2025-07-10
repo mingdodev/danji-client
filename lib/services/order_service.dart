@@ -48,4 +48,20 @@ class OrderService {
       throw Exception(resBody['message'] ?? '주문 실패');
     }
   }
+
+  Future<void> updateOrderStatus({
+    required int orderId,
+    required String status,
+  }) async {
+
+    final body = jsonEncode({
+      "status": status,
+    });
+    final response = await dio.patch('/api/orders/$orderId/status', data: body);
+    final resBody = response.data;
+
+    if (resBody['success'] != true) {
+      throw Exception(resBody['message'] ?? '주문 상태 변경 실패');
+    }
+  }
 }
