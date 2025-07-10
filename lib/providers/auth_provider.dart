@@ -28,7 +28,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required String refreshToken,
     required String role,
   }) async {
-    await storage.write(key: 'userId', value: 'userId');
+    await storage.write(key: 'userId', value: userId.toString());
     await storage.write(key: 'accessToken', value: accessToken);
     await storage.write(key: 'refreshToken', value: refreshToken);
     await storage.write(key: 'role', value: role);
