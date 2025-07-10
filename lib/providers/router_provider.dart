@@ -5,6 +5,7 @@ import 'package:danji_client/screens/customer/customer_order_screen.dart';
 import 'package:danji_client/screens/merchant/merchant_add_product_screen.dart';
 import 'package:danji_client/screens/merchant/merchant_orderList_screen.dart';
 import 'package:danji_client/screens/merchant/merchant_productList_screen.dart';
+import 'package:danji_client/screens/merchant/merchant_updateOrder_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../providers/auth_provider.dart';
@@ -58,7 +59,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
-        path: '/home/customer/orderList', builder: (context, state) => const CustomerOrderListScreen(),
+        path: '/home/customer/orderList',
+        builder: (context, state) => const CustomerOrderListScreen(),
       ),
 
       // MERCHANT
@@ -78,10 +80,22 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/home/merchant/orderList',
         builder: (context, state) => const MerchantOrderListScreen(),
       ),
-      // GoRoute(
-      //   path: '/home/merchant/orderList/update', builder: (context, state) => const MerchantUpdateOrderScreen(),
-      // ),
+      GoRoute(
+        path: '/home/merchant/orderList/update',
+        builder: (context, state) {
+          final extra = state.extra! as Map<String, dynamic>;
+          final orderId = extra['orderId'] as int;
+          final orderItems = List<Map<String, dynamic>>.from(
+            extra['orderItems'],
+          );
 
+          return MerchantUpdateOrderScreen(
+            orderId: orderId,
+            orderItems: orderItems,
+          );
+        },
+      ),
+      
       // GoRoute(
       //   path: '/home/chat', builder: (context, state) => const ChatScreen(),
       // ),

@@ -49,6 +49,22 @@ class OrderService {
     }
   }
 
+  Future<void> updateOrder({
+    required int orderId,
+    required List<Map<String, dynamic>> orderItems,
+  }) async {
+
+    final body = jsonEncode({
+      "orderItems": orderItems,
+    });
+    final response = await dio.patch('/api/orders/$orderId', data: body);
+    final resBody = response.data;
+
+    if (resBody['success'] != true) {
+      throw Exception(resBody['message'] ?? '주문 수정 실패');
+    }
+  }
+
   Future<void> updateOrderStatus({
     required int orderId,
     required String status,

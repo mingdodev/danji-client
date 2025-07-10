@@ -3,6 +3,7 @@ import 'package:danji_client/services/order_service.dart';
 import 'package:danji_client/widgets/app_header.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class MerchantOrderListScreen extends StatefulWidget {
   const MerchantOrderListScreen({super.key});
@@ -276,22 +277,36 @@ class _MerchantOrderListScreenState extends State<MerchantOrderListScreen> {
                                   ),
                                 ),
                               const SizedBox(height: 8),
-                              Container(
-                                width: double.infinity,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFD9D9D9),
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: const Center(
-                                  child: Text(
-                                    '주문 수정하기',
-                                    style: TextStyle(
-                                      color: Color(0xFF535353),
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                      height: 1.27,
-                                      letterSpacing: 0.60,
+                              GestureDetector(
+                                onTap: () {
+                                  context.push(
+                                    '/home/merchant/orderList/update',
+                                    extra: {
+                                      'orderId': order['orderId'],
+                                      'orderItems': orderItems,
+                                    }).then((result) {
+                                      if (result == true) {
+                                        _fetchOrders();
+                                      }
+                                    });
+                                },
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFD9D9D9),
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  child: const Center(
+                                    child: Text(
+                                      '주문 수정하기',
+                                      style: TextStyle(
+                                        color: Color(0xFF535353),
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                        height: 1.27,
+                                        letterSpacing: 0.60,
+                                      ),
                                     ),
                                   ),
                                 ),
