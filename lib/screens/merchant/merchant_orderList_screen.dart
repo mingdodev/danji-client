@@ -142,22 +142,33 @@ class _MerchantOrderListScreenState extends State<MerchantOrderListScreen> {
                                 ),
                               ),
                               const SizedBox(height: 16),
-                              Container(
-                                width: double.infinity,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF1E88E5),
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: const Center(
-                                  child: Text(
-                                    '1:1 채팅하기',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                      height: 1.27,
-                                      letterSpacing: 0.60,
+                              GestureDetector(
+                                onTap: () {
+                                  context.push(
+                                    '/chat',
+                                    extra: {
+                                      'targetId': customer['id'],
+                                      'targetName': customer['name'],
+                                    },
+                                  );
+                                },
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF1E88E5),
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  child: const Center(
+                                    child: Text(
+                                      '1:1 채팅하기',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                        height: 1.27,
+                                        letterSpacing: 0.60,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -279,16 +290,19 @@ class _MerchantOrderListScreenState extends State<MerchantOrderListScreen> {
                               const SizedBox(height: 8),
                               GestureDetector(
                                 onTap: () {
-                                  context.push(
-                                    '/home/merchant/orderList/update',
-                                    extra: {
-                                      'orderId': order['orderId'],
-                                      'orderItems': orderItems,
-                                    }).then((result) {
-                                      if (result == true) {
-                                        _fetchOrders();
-                                      }
-                                    });
+                                  context
+                                      .push(
+                                        '/home/merchant/orderList/update',
+                                        extra: {
+                                          'orderId': order['orderId'],
+                                          'orderItems': orderItems,
+                                        },
+                                      )
+                                      .then((result) {
+                                        if (result == true) {
+                                          _fetchOrders();
+                                        }
+                                      });
                                 },
                                 child: Container(
                                   width: double.infinity,
