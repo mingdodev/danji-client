@@ -1,3 +1,4 @@
+import 'package:danji_client/screens/customer/customer_marketDetail_screen.dart';
 import 'package:danji_client/screens/customer/customer_marketList_screen.dart';
 import 'package:danji_client/screens/merchant/merchant_add_product_screen.dart';
 import 'package:danji_client/screens/merchant/merchant_orderList_screen.dart';
@@ -31,11 +32,24 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const HomeCustomerScreen(),
       ),
       GoRoute(
-        path: '/home/customer/marketList', builder: (context, state) => const CustomerMarketListScreen(),
+        path: '/home/customer/marketList',
+        builder: (context, state) => const CustomerMarketListScreen(),
       ),
-      // GoRoute(
-      //   path: '/home/customer/marketList/detail', builder: (context, state) => const CustomerMarketDetailScreen(),
-      // ),
+      GoRoute(
+        path: '/home/customer/marketList/detail/:id',
+        builder: (context, state) {
+          final marketId = int.parse(state.pathParameters['id']!);
+          final extra =
+              state.extra as Map<String, String>;
+
+          return CustomerMarketdetailScreen(
+            marketId: marketId,
+            marketName: extra['marketName']!,
+            marketAddress: extra['marketAddress']!,
+          );
+        },
+      ),
+
       // GoRoute(
       //   path: '/home/customer/marketList/order', builder: (context, state) => const CustomerOrderScreen(),
       // ),
@@ -57,7 +71,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const MerchantAddProductScreen(),
       ),
       GoRoute(
-        path: '/home/merchant/orderList', builder: (context, state) => const MerchantOrderListScreen(),
+        path: '/home/merchant/orderList',
+        builder: (context, state) => const MerchantOrderListScreen(),
       ),
       // GoRoute(
       //   path: '/home/merchant/orderList/update', builder: (context, state) => const MerchantUpdateOrderScreen(),
