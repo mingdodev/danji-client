@@ -26,6 +26,7 @@ class CustomerMarketdetailScreen extends ConsumerStatefulWidget {
 class _CustomerMarketdetailScreenState
     extends ConsumerState<CustomerMarketdetailScreen> {
   List<Map<String, dynamic>> products = [];
+  List<Map<String, dynamic>> selectedProducts = [];
   bool isLoading = true;
 
   Future<void> _loadProducts() async {
@@ -37,9 +38,9 @@ class _CustomerMarketdetailScreenState
       });
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('상품 목록을 불러오는 데 실패했어요.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('상품 목록을 불러오는 데 실패했어요.')),
+      );
     }
   }
 
@@ -122,7 +123,6 @@ class _CustomerMarketdetailScreenState
         final product = products[index];
         final min = product['minQuantity'] ?? 0;
         final max = product['maxQuantity'];
-
         final controller = TextEditingController(text: '0');
         String? errorText;
 
@@ -181,9 +181,6 @@ class _CustomerMarketdetailScreenState
                       ],
                     ),
                   ),
-
-                  const SizedBox(width: 12),
-                  
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
@@ -202,23 +199,17 @@ class _CustomerMarketdetailScreenState
                             filled: true,
                             fillColor: Colors.white,
                             isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: 6,
-                            ),
+                            contentPadding: const EdgeInsets.symmetric(vertical: 6),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                               borderSide: BorderSide(
-                                color: errorText != null
-                                    ? Colors.red
-                                    : Colors.grey,
+                                color: errorText != null ? Colors.red : Colors.grey,
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                               borderSide: BorderSide(
-                                color: errorText != null
-                                    ? Colors.red
-                                    : AppColors.primary,
+                                color: errorText != null ? Colors.red : AppColors.primary,
                                 width: 1.5,
                               ),
                             ),
@@ -234,6 +225,28 @@ class _CustomerMarketdetailScreenState
                                 errorText = '$max 개 이하까지 주문 가능합니다';
                               } else {
                                 errorText = null;
+
+                                final existingIndex = selectedProducts.indexWhere(
+                                  (p) => p['id'] == product['id'],
+                                );
+
+                                if (input == 0) {
+                                  if (existingIndex != -1) {
+                                    selectedProducts.removeAt(existingIndex);
+                                  }
+                                } else {
+                                  final productData = {
+                                    'id': product['id'],
+                                    'name': product['name'],
+                                    'price': product['price'].toInt(),
+                                    'quantity': input,
+                                  };
+                                  if (existingIndex != -1) {
+                                    selectedProducts[existingIndex] = productData;
+                                  } else {
+                                    selectedProducts.add(productData);
+                                  }
+                                }
                               }
                             });
                           },
@@ -245,11 +258,7 @@ class _CustomerMarketdetailScreenState
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(
-                                Icons.warning_amber_rounded,
-                                color: Colors.red,
-                                size: 16,
-                              ),
+                              const Icon(Icons.warning_amber_rounded, color: Colors.red, size: 16),
                               const SizedBox(width: 4),
                               Flexible(
                                 child: Text(
@@ -281,14 +290,17 @@ class _CustomerMarketdetailScreenState
       child: SizedBox(
         height: 57,
         child: AppButton(
-          text: '상품 추가하기',
+          text: '주문서 작성하기',
           onPressed: () async {
-            final result = await context.push<bool>(
-              '/home/merchant/productList/add',
+            context.push(
+              '/home/customer/marketList/order',
+              extra: {
+                'marketId': widget.marketId,
+                'marketName': widget.marketName,
+                'marketAddress': widget.marketAddress,
+                'products': selectedProducts,
+              },
             );
-            if (result == true) {
-              await _loadProducts();
-            }
           },
           backgroundColor: AppColors.primary,
           textColor: AppColors.background,
