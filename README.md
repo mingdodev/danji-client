@@ -9,6 +9,8 @@
 
 [프로토타입 바로가기](https://www.figma.com/proto/hGn06ddfoamq17nGg1EcTN/danji?node-id=1-2&t=dpXDFk1PRrgYN6Ua-1)
 
+[시연 영상 바로가기](https://youtu.be/3lI_Xumikg8)
+
 <br>
 
 ### 문제 정의 및 추진 목적
