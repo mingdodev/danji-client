@@ -147,6 +147,7 @@ class _MerchantOrderListScreenState extends State<MerchantOrderListScreen> {
                                   context.push(
                                     '/chat',
                                     extra: {
+                                      'orderId': order['orderId'],
                                       'targetId': customer['id'],
                                       'targetName': customer['name'],
                                     },
