@@ -5,11 +5,13 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChatScreen extends ConsumerStatefulWidget {
+  final int orderId;
   final String targetName;
   final int targetId;
 
   const ChatScreen({
     super.key,
+    required this.orderId,
     required this.targetName,
     required this.targetId,
   });
@@ -57,7 +59,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
     socket.onConnect((_) {
       print('✅ Socket connected');
-      socket.emit('joinRoom', {'userId': myId, 'targetId': widget.targetId});
+      socket.emit('joinRoom', {'orderId': widget.orderId, 'userId': myId, 'targetId': widget.targetId});
     });
 
     socket.on('previousMessages', (data) {
