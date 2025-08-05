@@ -12,18 +12,56 @@ class CustomerMarketListScreen extends StatefulWidget {
 }
 
 class _CustomerMarketListScreenState extends State<CustomerMarketListScreen> {
-  List<Map<String, dynamic>> markets = [];
-  bool isLoading = true;
   final TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
-  Future<void> _loadMarkets({String keyword = ""}) async {
+  List<Map<String, dynamic>> _markets = [];
+  bool _hasNext = true;
+  bool _isFetching = false;
+  int _page = 0;
+  String _currentKeyword = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMarkets();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        _loadMarkets();
+      }
+    });
+  }
+
+  Future<void> _loadMarkets({bool isSearch = false}) async {
+    if (_isFetching || (!_hasNext && !isSearch)) return;
+
+    setState(() {
+      _isFetching = true;
+    });
+
+    if (isSearch) {
+      _page = 0;
+      _markets.clear();
+      _hasNext = true;
+    }
+    
+    await Future.delayed(const Duration(milliseconds: 1000));
+
     try {
-      final response = await MarketService().getMarkets(keyword);
+      final response = await MarketService().getMarkets(_currentKeyword, _page);
+      final newItems = List<Map<String, dynamic>>.from(response['items']);
+
       setState(() {
-        markets = List<Map<String, dynamic>>.from(response);
-        isLoading = false;
+        _markets.addAll(newItems);
+        _hasNext = response['hasNext'];
+        _page++;
+        _isFetching = false;
       });
     } catch (e) {
+      setState(() {
+        _isFetching = false;
+      });
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,
@@ -31,10 +69,11 @@ class _CustomerMarketListScreenState extends State<CustomerMarketListScreen> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _loadMarkets();
+  void _onSearch() {
+    setState(() {
+      _currentKeyword = _searchController.text;
+    });
+    _loadMarkets(isSearch: true);
   }
 
   @override
@@ -52,23 +91,26 @@ class _CustomerMarketListScreenState extends State<CustomerMarketListScreen> {
             ),
             const SizedBox(height: 12),
             Expanded(
-              child: ListView(
+              child: ListView.builder(
+                controller: _scrollController,
+                itemCount: _markets.length + (_hasNext ? 1 : 0),
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                children: [
-                  if (isLoading)
-                    const Center(child: CircularProgressIndicator())
-                  else if (markets.isEmpty)
-                    const Center(child: Text("등록된 가게가 없어요."))
-                  else
-                    ...markets.map(
-                      (market) => _buildStoreCard(
-                        id: market['id'],
-                        name: market['name'],
-                        address: market['address'],
-                        imageUrl: market['imageUrl'],
-                      ),
-                    ),
-                ],
+                itemBuilder: (context, index) {
+                  if (index < _markets.length) {
+                    final market = _markets[index];
+                    return _buildStoreCard(
+                      id: market['id'],
+                      name: market['name'],
+                      address: market['address'],
+                      imageUrl: market['imageUrl'],
+                    );
+                  } else {
+                    return const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 20),
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                },
               ),
             ),
           ],
@@ -105,12 +147,11 @@ class _CustomerMarketListScreenState extends State<CustomerMarketListScreen> {
                     letterSpacing: 0.50,
                   ),
                 ),
+                onSubmitted: (_) => _onSearch(),
               ),
             ),
             IconButton(
-              onPressed: () {
-                _loadMarkets(keyword: _searchController.text);
-              },
+              onPressed: _onSearch,
               icon: const Icon(Icons.search, color: Color(0xFF1E88E5)),
             ),
           ],
@@ -141,7 +182,6 @@ class _CustomerMarketListScreenState extends State<CustomerMarketListScreen> {
         ),
         child: Row(
           children: [
-            // 마켓 정보
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,8 +209,6 @@ class _CustomerMarketListScreenState extends State<CustomerMarketListScreen> {
               ),
             ),
             const SizedBox(width: 16),
-
-            // 이미지 영역
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: imageUrl != null && imageUrl.isNotEmpty
@@ -199,5 +237,12 @@ class _CustomerMarketListScreenState extends State<CustomerMarketListScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _searchController.dispose();
+    super.dispose();
   }
 }
