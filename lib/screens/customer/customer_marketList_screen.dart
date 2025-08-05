@@ -45,8 +45,6 @@ class _CustomerMarketListScreenState extends State<CustomerMarketListScreen> {
       _markets.clear();
       _hasNext = true;
     }
-    
-    await Future.delayed(const Duration(milliseconds: 1000));
 
     try {
       final response = await MarketService().getMarkets(_currentKeyword, _page);
