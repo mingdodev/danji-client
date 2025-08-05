@@ -102,6 +102,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final extra = state.extra as Map<String, dynamic>;
           return ChatScreen(
+            orderId: extra['orderId'],
             targetId: extra['targetId'],
             targetName: extra['targetName'],
           );
