@@ -89,27 +89,38 @@ class _CustomerMarketListScreenState extends State<CustomerMarketListScreen> {
             ),
             const SizedBox(height: 12),
             Expanded(
-              child: ListView.builder(
-                controller: _scrollController,
-                itemCount: _markets.length + (_hasNext ? 1 : 0),
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemBuilder: (context, index) {
-                  if (index < _markets.length) {
-                    final market = _markets[index];
-                    return _buildStoreCard(
-                      id: market['id'],
-                      name: market['name'],
-                      address: market['address'],
-                      imageUrl: market['imageUrl'],
-                    );
-                  } else {
-                    return const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 20),
-                      child: Center(child: CircularProgressIndicator()),
-                    );
-                  }
-                },
-              ),
+              child: _markets.isEmpty && !_isFetching
+                  ? Center(
+                      child: Text(
+                        '앗! 해당하는 가게를 찾을 수 없어요.',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    )
+                  : ListView.builder(
+                      controller: _scrollController,
+                      itemCount: _markets.length + (_hasNext ? 1 : 0),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemBuilder: (context, index) {
+                        if (index < _markets.length) {
+                          final market = _markets[index];
+                          return _buildStoreCard(
+                            id: market['id'],
+                            name: market['name'],
+                            address: market['address'],
+                            imageUrl: market['imageUrl'],
+                          );
+                        } else {
+                          return const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 20),
+                            child: Center(child: CircularProgressIndicator()),
+                          );
+                        }
+                      },
+                    ),
             ),
           ],
         ),
